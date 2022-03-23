@@ -1,0 +1,28 @@
+---
+title: "fasterq-dump-snakemake-example"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a super small example that uses Snakemake to get fastq files from
+the Short Read Archive using `fasterq-dump`.  We originally tried to use the
+Snakemake wrapper for this, but that seemed to make SUMMIT unhappy, so we
+just went minimal and do it with a simple shell block.
+
+Note that the output file names can't be changed without messing with
+the shell script (i.e., the `-O` option to fasterq-dump).  So, this isn't
+super general, but it will work.
+
+It is configured so that rule all downloads the first five pearl millet
+accessions from the SRA.  
+
+To run this on SUMMIT, on an interactive shell _on a compute node_, first
+make sure that necessary conda environment is installed.
+```sh
+conda activate snakemake 
+
+
+```

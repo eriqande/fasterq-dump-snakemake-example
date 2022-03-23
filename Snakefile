@@ -16,5 +16,9 @@ rule get_fastq_pe:
     params:
         extra="--skip-technical"
     threads: 1  # defaults to 6
+    resources:
+        time="01:00:00"
+    conda:
+        "sra-tools.yaml"
     shell:
         "fasterq-dump --threads 1 --skip-technical -O fastq  {wildcards.accession}"
