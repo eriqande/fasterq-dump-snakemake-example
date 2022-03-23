@@ -1,12 +1,20 @@
+ACCS = ["SRR2467340", "SRR2467341", "SRR2467342", "SRR2467343", "SRR2467344"]
+
+
+rule all:
+    input:
+        expand("fastq/{a}_{R}.fastq", a = ACCS, R = [1, 2])
+
+
 rule get_fastq_pe:
     output:
         # the wildcard name must be accession, pointing to an SRA number
-        "fastq/{accession}_R1.fq.gz",
-        "fastq/{accession}_R2.fq.gz",
+        "fastq/{accession}_1.fastq",
+        "fastq/{accession}_2.fastq",
     log:
         "logs/get_fastq_pe/{accession}.log"
     params:
         extra="--skip-technical"
     threads: 1  # defaults to 6
-    wrapper:
-        "v1.3.1/bio/sra-tools/fasterq-dump"
+    shell:
+        "fasterq-dump --threads 1 --skip-technical -O fastq  {wildcards.accession}"
