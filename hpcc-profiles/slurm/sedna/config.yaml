@@ -12,6 +12,7 @@ cluster:
 default-resources:
   - time="08:00:00"
   - mem_mb=4800
+  - disk_mb=1000000
 restart-times: 0
 max-jobs-per-second: 10
 max-status-checks-per-second: 50
