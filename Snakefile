@@ -15,7 +15,7 @@ rule get_fastq_pe:
         "logs/get_fastq_pe/{accession}.log"
     params:
         extra="--skip-technical"
-    threads: 5
+    threads: 6
     resources:
         time="4-00:00:00",
         mem_mb=24000
