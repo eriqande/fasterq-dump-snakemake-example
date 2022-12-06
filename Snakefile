@@ -19,6 +19,9 @@ rule get_fastq_pe:
     resources:
         time="4-00:00:00",
         mem_mb=24000
+    log:
+      out="results/logs/get_fastq_pe/{accession}.out",
+      err="results/logs/get_fastq_pe/{accession}.err",
     conda:
         "sra-tools.yaml"
     shell:
@@ -26,4 +29,4 @@ rule get_fastq_pe:
         " --threads {threads} "
         " --skip-technical "
         " -t /home/eanderson/scratch/tmp/phils-version-{wildcards.accession} "  # write temp files SSD scratch
-        " -O results/fastq  {wildcards.accession}"
+        " -O results/fastq  {wildcards.accession} > {log.out} 2> {log.err} "
