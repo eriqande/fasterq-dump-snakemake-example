@@ -11,8 +11,6 @@ rule get_fastq_pe:
         # the wildcard name must be accession, pointing to an SRA number
         "results/fastq/{accession}_1.fastq",
         "results/fastq/{accession}_2.fastq",
-    log:
-        "logs/get_fastq_pe/{accession}.log"
     params:
         extra="--skip-technical"
     threads: 6
@@ -28,5 +26,5 @@ rule get_fastq_pe:
         "fasterq-dump          "
         " --threads {threads} "
         " --skip-technical "
-        " -t /home/eanderson/scratch/tmp/phils-version-{wildcards.accession} "  # write temp files SSD scratch
+        " -t /home/eanderson/scratch/tmp/phils-version-{wildcards.accession} "  # write temp files to SSD scratch
         " -O results/fastq  {wildcards.accession} > {log.out} 2> {log.err} "
