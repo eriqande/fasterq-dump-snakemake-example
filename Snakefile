@@ -25,5 +25,5 @@ rule get_fastq_pe:
         "fasterq-dump          "
         " --threads {threads} "
         " --skip-technical "
-        " -t /tmp/phil-fasterq-{wildcards.accession} "  # write temp files to node-local /tmp
+        " -t /home/eanderson/scratch/tmp/phils-version-{wildcards.accession} "  # write temp files SSD scratch
         " -O results/fastq  {wildcards.accession}"
