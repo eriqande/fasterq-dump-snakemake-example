@@ -24,25 +24,28 @@ rule prefetch_accession:
         " --max-size {params.ms} "
         " -O {output.predir} "
 
-rule get_fastq_pe:
+rule get_fastq_pe_from_prefetch:
     output:
         # the wildcard name must be accession, pointing to an SRA number
-        "results/fastq/{accession}_1.fastq",
-        "results/fastq/{accession}_2.fastq",
+        fq1="results/fastq/{accession}_1.fastq",
+        fq2="results/fastq/{accession}_2.fastq",
     params:
         extra="--skip-technical"
-    threads: 6
+    threads: 4
     resources:
         time="4-00:00:00",
         mem_mb=24000
     log:
-      out="results/logs/get_fastq_pe/{accession}.out",
-      err="results/logs/get_fastq_pe/{accession}.err",
+      out="results/logs/get_fastq_pe_from_prefetch/{accession}.out",
+      err="results/logs/get_fastq_pe_from_prefetch/{accession}.err",
     conda:
         "sra-tools.yaml"
     shell:
-        "fasterq-dump          "
+        " cd results/prefetch_dirs;        "  # crazy-crap! fasterq-dump must be in the same dir as the prefetched directory, according to: https://github.com/ncbi/sra-tools/wiki/08.-prefetch-and-fasterq-dump
+        " fasterq-dump          "
         " --threads {threads} "
         " {params.extra} "
         " -t /home/eanderson/scratch/tmp/phils-version-{wildcards.accession} "  # write temp files to SSD scratch
-        " -O results/fastq  {wildcards.accession} > {log.out} 2> {log.err} "
+        " -O ../../$(dirname {output.fq1})  {wildcards.accession} > ../../{log.out} 2> ../../{log.err}; "
+        " cd ../.. "
+
