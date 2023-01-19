@@ -10,7 +10,7 @@ rule all:
 
 rule prefetch_accession:
     output: 
-        predir=directory("results/prefetch_dirs/{accession}")
+        predir=temp(directory("results/prefetch_dirs/{accession}"))
     params:
         ms = "20g",  # in case one must increase the max size
     log:
@@ -24,6 +24,8 @@ rule prefetch_accession:
         " -O {output.predir} "
 
 rule get_fastq_pe_from_prefetch:
+    input:
+        pred="results/prefetch_dirs/{accession}"
     output:
         # the wildcard name must be accession, pointing to an SRA number
         fq1="results/fastq/{accession}_1.fastq",
@@ -40,7 +42,7 @@ rule get_fastq_pe_from_prefetch:
     conda:
         "sra-tools.yaml"
     shell:
-        " cd results/prefetch_dirs;        "  # crazy-crap! fasterq-dump must be in the same dir as the prefetched directory, according to: https://github.com/ncbi/sra-tools/wiki/08.-prefetch-and-fasterq-dump
+        " cd $(dirname {input.pred});  "  # crazy-crap! fasterq-dump must be in the same dir as the prefetched directory, according to: https://github.com/ncbi/sra-tools/wiki/08.-prefetch-and-fasterq-dump
         " fasterq-dump          "
         " --threads {threads} "
         " {params.extra} "
