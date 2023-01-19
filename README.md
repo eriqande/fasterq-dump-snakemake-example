@@ -2,59 +2,38 @@ fasterq-dump-snakemake-example
 ================
 
 This is a super small example that uses Snakemake to get fastq files
-from the Short Read Archive using `fasterq-dump`. We originally tried to
-use the Snakemake wrapper for this, but that seemed to make SUMMIT
-unhappy, so we just went minimal and do it with a simple shell block.
+from the Short Read Archive using `fasterq-dump`.
 
-Note that the output file names can’t be changed without messing with
-the shell script (i.e., the `-O` option to fasterq-dump). So, this isn’t
-super general, but it will work.
+This version in the `phils-version-with-prefetch` was tailored to use
+the prefetch utility.
 
-It is configured so that rule all downloads the first five pearl millet
-accessions from the SRA.
+It is fairly straightforward, but, due to fasterq-dump needing to be run
+in the same directory as the prefetched accession, it required a little
+`cd` chicanery, etc.
 
-To run this on SUMMIT, you should be on `scompile` by doing
-`ssh scompile`.
+If you are going to use this, note that you have to rename the temp
+directory in the line that looks like this:
 
-First you need to clone this repository. SUMMIT has some issues with its
-ssh agent so you probably have to do this to get things from GitHub
-(assuming that you have your SSH keys set up in \`id\_ed25519’)
-
-``` sh
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-
-# enter your passphrase if you have one
-
-# then do this IN YOUR scratch DIRECTORY
-git clone git@github.com:eriqande/fasterq-dump-snakemake-example.git
+``` python
+-t /home/eanderson/scratch/tmp/phils-version-{wildcards.accession}
 ```
 
-Then, you have to have a snakemake conda environment. If you don’t have
-that you can install it with mamba.
+to be a location that you have access to. Like:
 
-Then `cd` into the `fasterq-dump-snakemake-example` and issue the
-following commands to install the programs that are needed.
-
-``` sh
-conda activate snakemake
-snakemake --use-conda --conda-create-envs-only --cores 1
+``` python
+-t /home/pmorin/scratch/tmp/phils-version-{wildcards.accession}
 ```
 
-Once that is done, from `scompile` (and also logged in via a TMUX
-session so that things don’t die after you logout), do this command from
-within your snakemake conda environment
+To run it on the example ACCS list, I did this on a node with 20 cores:
 
 ``` sh
-snakemake --use-conda --profile slurm_profile --jobs 10
+snakemake --cores 20 --use-conda
 ```
 
-That starts each of the jobs using `sbatch`, and the run simultaneously.
+It ran without any hitches in just a couple of minutes.
 
-From another shell you can say:
+It is set up so that the prefetched accessions get deleted once the
+fastq files have been extracted from them (Snakemake takes care of
+that).
 
-``` sh
-squeue -u $(whoami)
-```
-
-to see you currently running jobs.
+Phil, to run this under SLURM you will want to use the sedna profile.
