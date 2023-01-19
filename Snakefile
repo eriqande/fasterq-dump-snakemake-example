@@ -1,8 +1,7 @@
 #ACCS = ["SRR17730107", "SRR17730108", "SRR17730109", "SRR17730110", "SRR17730111"]
 
-# Here are some rainbow trout accessions that I chose for testing because
-# they are small (around 20 Mb)
-ACCS = ["SRR23034112", "SRR23034123", "SRR23034124"]
+# here are five paired end accessions for testing
+ACCS = ["SRR2467340", "SRR2467341", "SRR2467342", "SRR2467343", "SRR2467344"]
 
 rule all:
     input:
