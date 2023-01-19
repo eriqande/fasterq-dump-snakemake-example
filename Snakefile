@@ -21,7 +21,7 @@ rule prefetch_accession:
     shell:
         " prefetch {wildcards.accession} "
         " --max-size {params.ms} "
-        " -O {output.predir} "
+        " -O {output.predir} > {log.out} 2> {log.err} "
 
 rule get_fastq_pe_from_prefetch:
     input:
