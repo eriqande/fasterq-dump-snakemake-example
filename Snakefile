@@ -74,8 +74,8 @@ rule get_fastq_pe_from_prefetch:
         pred="results/prefetch_dirs/{accession}"
     output:
         # the wildcard name must be accession, pointing to an SRA number
-        fq1="results/fastq/{accession}_1.fastq",
-        fq2="results/fastq/{accession}_2.fastq",
+        fq1=temp("results/fastq/{accession}_1.fastq"),
+        fq2=temp("results/fastq/{accession}_2.fastq"),
     params:
         extra="--skip-technical"
     threads: 4
@@ -96,3 +96,15 @@ rule get_fastq_pe_from_prefetch:
         " -O ../../$(dirname {output.fq1})  {wildcards.accession} > ../../{log.out} 2> ../../{log.err}; "
         " cd ../.. "
 
+
+
+rule gzip_fastq:
+    input:
+        fq="results/fastq/{accession}_{read}.fastq",
+    output:
+        "results/fastq/{accession}_{read}.fastq.gz"
+    threads: 4
+    log:
+        "results/logs/gzip_fastq/{accession}_{read}.log"
+    shell:
+        "pigz -k -p {threads} {input} > {log} 2> &1 "
