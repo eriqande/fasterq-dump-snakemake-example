@@ -109,4 +109,4 @@ rule gzip_fastq:
     conda:
         "pigz.yaml"
     shell:
-        "pigz -k -p {threads} {input} > {log} 2> &1 "
+        "pigz -k -p {threads} -f -9 {input} 2> {log} "
