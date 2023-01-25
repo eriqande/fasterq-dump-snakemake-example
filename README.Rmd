@@ -40,3 +40,69 @@ Phil, to run this under SLURM you will want to use the sedna profile.
 
 
 
+
+## Update
+
+Just to be explicit about how to run this under SLURM, using sbatch on SEDNA: you run it like this:
+```sh
+snakemake  --profile hpcc-profiles/slurm/sedna
+```
+There is no need to submit jobs yourself via sbatch (and write a new Snakefile within
+each one).  That is what the hpcc-profiles/slurm/sedna profile does.  Study the
+profile:
+```yaml
+cluster:
+  mkdir -p results/slurm_logs/{rule} &&
+  sbatch
+    --exclude=node[29-36]
+    --cpus-per-task={threads}
+    --mem={resources.mem_mb}
+    --time={resources.time}
+    --job-name=smk-{rule}-{wildcards}
+    --output=results/slurm_logs/{rule}/{rule}-{wildcards}-%j.out
+    --error=results/slurm_logs/{rule}/{rule}-{wildcards}-%j.err
+    --parsable
+default-resources:
+  - time="08:00:00"
+  - mem_mb=4800
+  - disk_mb=1000000
+restart-times: 0
+max-jobs-per-second: 10
+max-status-checks-per-second: 50
+local-cores: 1
+latency-wait: 60
+cores: 600
+jobs: 1200
+keep-going: True
+rerun-incomplete: True
+printshellcmds: True
+use-conda: True
+cluster-status: status-sacct.sh
+cluster-cancel: scancel
+cluster-cancel-nargs: 1000
+```
+
+That YAML file basically lists a lot of command line arguments that snakemake
+gets run with.  (for example, `use-conda: True` translates to a command line
+option of `--use-conda`).
+
+The key one here is the `cluster` option.  The way it is set up it shows
+that snakemake will submit jobs to SLURM using the `sbatch` command with 
+options filled in my Snakemake as shown:
+```sh
+sbatch
+    --exclude=node[29-36]
+    --cpus-per-task={threads}
+    --mem={resources.mem_mb}
+    --time={resources.time}
+    --job-name=smk-{rule}-{wildcards}
+    --output=results/slurm_logs/{rule}/{rule}-{wildcards}-%j.out
+    --error=results/slurm_logs/{rule}/{rule}-{wildcards}-%j.err
+```
+
+
+
+So, to test it, I updated the Snakefile to include 40 accessions from our
+Chinook project.  
+
+
