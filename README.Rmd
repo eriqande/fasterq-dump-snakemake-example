@@ -117,8 +117,9 @@ job                           count    min threads    max threads
 --------------------------  -------  -------------  -------------
 all                               1              1              1
 get_fastq_pe_from_prefetch       40              4              4
+gzip_fastq                       80              1              1
 prefetch_accession               40              1              1
-total                            81              1              4
+total                           161              1              4
 
 This was a dry-run (flag -n). The order of jobs does not reflect the order of execution.
 ```
