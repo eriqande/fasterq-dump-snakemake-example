@@ -103,7 +103,7 @@ rule gzip_fastq:
         fq="results/fastq/{accession}_{read}.fastq",
     output:
         "results/fastq/{accession}_{read}.fastq.gz"
-    threads: 4
+    threads: 1
     log:
         "results/logs/gzip_fastq/{accession}_{read}.log"
     shell:
