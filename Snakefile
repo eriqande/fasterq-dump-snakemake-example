@@ -51,7 +51,7 @@ ACCS=[
 
 rule all:
     input:
-        expand("results/fastq/{a}_{R}.fastq", a = ACCS, R = [1, 2])
+        expand("results/fastq/{a}_{R}.fastq.gz", a = ACCS, R = [1, 2])
 
 
 rule prefetch_accession:
