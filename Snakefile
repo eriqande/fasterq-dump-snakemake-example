@@ -106,5 +106,7 @@ rule gzip_fastq:
     threads: 1
     log:
         "results/logs/gzip_fastq/{accession}_{read}.log"
+    conda:
+        "pigz.yaml"
     shell:
         "pigz -k -p {threads} {input} > {log} 2> &1 "
