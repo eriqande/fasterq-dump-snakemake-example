@@ -17,7 +17,8 @@ rule get_fastq_pe:
         extra="--skip-technical"
     threads: 8
     resources:
-        time="12:00:00"
+        time="12:00:00",
+        mem_mb=29920
     conda:
         "sra-tools.yaml"
     shell:
