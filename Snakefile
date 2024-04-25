@@ -1,5 +1,5 @@
-ACCS = ["SRR2467340", "SRR2467341", "SRR2467342", "SRR2467343", "SRR2467344"]
-
+# ACCS = ["SRR2467340", "SRR2467341", "SRR2467342", "SRR2467343", "SRR2467344"]
+ACCS = ["ERX10692180"]
 
 rule all:
     input:
@@ -15,10 +15,10 @@ rule get_fastq_pe:
         "logs/get_fastq_pe/{accession}.log"
     params:
         extra="--skip-technical"
-    threads: 1  # defaults to 6
+    threads: 8
     resources:
-        time="01:00:00"
+        time="12:00:00"
     conda:
         "sra-tools.yaml"
     shell:
-        "fasterq-dump --threads 1 --skip-technical -O fastq  {wildcards.accession}"
+        "fasterq-dump --threads {threads} --skip-technical -O fastq  {wildcards.accession}"
